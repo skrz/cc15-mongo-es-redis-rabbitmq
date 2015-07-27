@@ -1,0 +1,13 @@
+{% extends "CC15Bundle::layout.html.twig" %}
+
+{% block body %}
+    <h1>Vyhledávání "<em>{{ q }}</em>"</h1>
+
+    {% if products|length > 0 %}
+        {% for product in products %}
+            {% include "CC15Bundle::product.html.twig" with {product:product} only %}
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-warning">Nic jsme nenašli.</div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,13 @@
+#!/usr/bin/env php
+<?php
+namespace App;
+
+use CC15\CC15Kernel;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+
+require_once __DIR__ . "/vendor/autoload.php";
+
+$kernel = new CC15Kernel("console", true);
+$app = new Application($kernel);
+$app->setCatchExceptions(false);
+$app->run();

@@ -1,0 +1,10 @@
+.DS_STORE
+.vagrant
+/cache/*
+/gen-src/**/*Container.php
+/gen-src/**/*.meta
+/composer.lock
+/composer.phar
+/vendor
+/log
+/_prezentace

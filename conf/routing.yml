@@ -1,0 +1,24 @@
+homepage:
+  path: /
+  defaults:
+    _controller: controller.homepage:homepageAction
+
+eshop_detail:
+  path: /eshop/{eshop}
+  defaults:
+    _controller: controller.eshop:eshopDetailAction
+
+eshop_category_detail:
+  path: /eshop/{eshop}/{category}
+  defaults:
+    _controller: controller.eshop:eshopDetailAction
+
+search:
+  path: /vyhledavani
+  defaults:
+    _controller: controller.search:searchAction
+
+fragment_page_users_online:
+  path: /_fragment/Page/pageUsersOnline
+  defaults:
+    _controller: controller.page:pageUsersOnlineAction

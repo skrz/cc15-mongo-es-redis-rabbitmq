@@ -1,0 +1,17 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-3">
+                {% if product.firstImage %}
+                    <div style="height: 200px; line-height: 200px; overflow: hidden;">
+                        <img src="{{ product.firstImage.url }}" style="width: 100%;">
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-sm-9">
+                <h2>{{ product.name }}</h2>
+                <p><small>{{ product.id }}</small></p>
+            </div>
+        </div>
+    </div>
+</div>

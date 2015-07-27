@@ -1,0 +1,130 @@
+#
+# PARAMETERS
+#
+parameters:
+  elasticsearch.catalog_index_logical_name: catalog
+  elasticsearch.catalog_index_alias_name: catalog_current
+
+#
+# AUTOWIRING SETTINGS
+#
+autowiring:
+  ignored_services:
+    - /^debug\./
+    - /^file/
+    - /^form\./
+    - /^fragment\./
+    - kernel
+    - http_kernel
+    - /^monolog\./
+    - /^request/
+    - /^router/
+    - /^security\./
+    - service.googleAnalyticsClient
+    - service.googleAnalyticsService
+    - /^templating/
+    - /^translat/
+    - /^view\./
+
+  preferred_services:
+    Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface: session.storage.native
+    Psr\Log\LoggerInterface: logger
+
+  fast_annotation_checks: [ @Consumer, @Producer ]
+
+  autoscan_psr4:
+    CC15: %kernel.root_dir%/src/CC15
+
+#
+# BUNNY
+#
+bunny:
+  exchanges:
+    change:
+      type: topic
+      durable: true
+
+  queues:
+    elasticsearch_catalog:
+      durable: true
+      bindings:
+        - exchange: change
+          routing_key: change.product.#
+
+    feed_download:
+      durable: true
+
+    feed_import:
+      durable: true
+
+#
+# FRAMEWORK SETTINGS
+#
+framework:
+  session:
+    name: "PHPSESSID"
+    cookie_lifetime: 0 # session cookie
+    cookie_path: /
+    #cookie_domain: "TODO"
+    #cookie_secure: true # TODO: enable to HTTPS-only session cookies
+    cookie_httponly: true
+  secret: "ThisIsNotVerySecure" # FIXME: change to randomly generated string
+  router:
+    resource: "%kernel.root_dir%/conf/routing.yml"
+    strict_requirements: ~
+  form: ~
+  default_locale:  "cs"
+  templating:
+    engines: twig
+  trusted_hosts: ~
+  trusted_proxies: ~
+  session:
+    handler_id: ~
+  http_method_override: true
+
+#
+# MONOLOG
+#
+monolog: ~
+
+#
+# TWIG
+#
+twig: ~
+
+#
+# SERVICES
+#
+services:
+  spec:
+    class: CC15\CC15MetaSpec
+    arguments:
+      - %kernel.root_dir%
+
+  service_container:
+    class: Symfony\Component\DependencyInjection\ContainerInterface
+    synthetic: true
+
+  redis:
+    class: Predis\Client
+
+  elasticsearch:
+    class: Elasticsearch\Client
+
+  mongo_client:
+    class: MongoClient
+    arguments:
+      - mongodb://localhost:27017
+      - { connect: true }
+
+  mongo:
+    class: MongoDB
+    factory: [@mongo_client, "selectDB"]
+    arguments:
+      - cc15
+
+  component.usersOnlineSubscriber:
+    class: CC15\Controller\UsersOnlineSubscriber
+    scope: request
+    tags:
+      - name: kernel.event_subscriber
